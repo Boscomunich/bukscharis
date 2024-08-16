@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id
+  email     String    @unique
+  name      String
+  password  String
+  phoneNo   String
+  verified  Boolean   @default(false)
+  activated Boolean   @default(true)
+  location  Location?
+  profile   Profile?
+  orders    Order[]
+}
+
+model Admin {
+  id       String  @id
+  email    String  @unique
+  name     String
+  password String
+  phoneNo  String
+  active   Boolean @default(false)
+}
+
+model Location {
+  id        String @id
+  state     String
+  LGA       String
+  zone      String
+  street    String
+  createdBy User   @relation(fields: [userId], references: [id])
+  userId    String @unique
+}
+
+model Profile {
+  id         String    @id
+  gender     String
+  height     Float
+  build      String
+  complexion String
+  age        String
+  ethnicity  String
+  createdBy  User      @relation(fields: [userId], references: [id])
+  userId     String    @unique
+  likes      Like[]
+  Comment    Comment[]
+}
+
+model Product {
+  id          String    @id
+  style       String
+  design      String
+  color       String
+  image       String[]
+  material    String
+  name        String
+  size        Float
+  description String
+  price       Float
+  likes       Like[]
+  comment     Comment[]
+  likeCount   Int       @default(0)
+  createdAt   DateTime  @default(now())
+}
+
+model Like {
+  id         String  @id
+  createdBy  Profile @relation(fields: [profileId], references: [id])
+  profileId  String
+  createdFor Product @relation(fields: [productId], references: [id])
+  productId  String
+
+  @@unique([profileId, productId])
+}
+
+model Comment {
+  id         String  @id
+  content    String
+  createdBy  Profile @relation(fields: [profileId], references: [id])
+  profileId  String
+  createdFor Product @relation(fields: [productId], references: [id])
+  productId  String
+
+  @@unique([profileId, productId])
+}
+
+model Order {
+  id        String  @id
+  style     String
+  design    String
+  color     String
+  material  String
+  name      String
+  price     Float
+  paid      Boolean @default(false)
+  createdBy User    @relation(fields: [userId], references: [id])
+  userId    String
+}
