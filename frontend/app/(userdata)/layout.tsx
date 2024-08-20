@@ -1,9 +1,7 @@
 import { Roboto } from 'next/font/google'
 import type { Metadata } from "next";
-import "./globals.css";
-import { StoreProvider } from './features/storeprovider';
-import { Providers } from './providers';
-import Navbar from './navbar';
+import "../globals.css";
+import { Providers } from '../providers';
 
 const roboto = Roboto({
   weight: '400',
@@ -22,14 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <StoreProvider>
+      <body className={`${roboto.className} dark:bg-darkBg text-white`} >
         <Providers>
-          <body className={`${roboto.className} dark:bg-rare`} >
-            <Navbar/>
-            {children}
-          </body>
+          {children}
         </Providers>
-      </StoreProvider>
+      </body>
     </html>
   );
 }

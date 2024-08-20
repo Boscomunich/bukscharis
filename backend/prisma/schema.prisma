@@ -8,25 +8,19 @@ datasource db {
 }
 
 model User {
-  id        String    @id
-  email     String    @unique
-  name      String
-  password  String
-  phoneNo   String
-  verified  Boolean   @default(false)
-  activated Boolean   @default(true)
-  location  Location?
-  profile   Profile?
-  orders    Order[]
-}
-
-model Admin {
-  id       String  @id
-  email    String  @unique
-  name     String
-  password String
-  phoneNo  String
-  active   Boolean @default(false)
+  id              String    @id
+  email           String    @unique
+  name            String
+  password        String?
+  verified        Boolean   @default(false)
+  profilecomplete Boolean   @default(false)
+  restricted      Boolean   @default(false)
+  blocked         Boolean   @default(false)
+  isadmin         Boolean   @default(false)
+  ismanager       Boolean   @default(false)
+  location        Location?
+  profile         Profile?
+  orders          Order[]
 }
 
 model Location {
@@ -41,6 +35,7 @@ model Location {
 
 model Profile {
   id         String    @id
+  phoneNo    String
   gender     String
   height     Float
   build      String

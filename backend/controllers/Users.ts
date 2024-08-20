@@ -10,8 +10,9 @@ const prisma = new PrismaClient()
 
 // register user to the database
 const registerUser = tryCatch( async (req: Request, res: Response) => {
-    const {name, email, phoneNo, password} = req.body
-    if (!name || !email || !phoneNo || !password) {
+    console.log(req.body)
+    const {name, email, password} = req.body
+    if (!name || !email ) {
         return res.status(400).json('all fields are required')
     }
     const userExist = await prisma.user.findFirst({
@@ -29,18 +30,17 @@ const registerUser = tryCatch( async (req: Request, res: Response) => {
             id: userId,
             email: email,
             name: name,
-            phoneNo: phoneNo,
             password: encryptedPassWord
         }
     })
-    return res.status(200).json({email: email, id: userId})
+    return res.status(200).json('Email sent, verify your email to continue')
 })
 
 //create user location and profile table
 const createUserProfile = tryCatch( async (req: Request, res: Response) => {
     const locationId = crypto.randomBytes(16).toString('hex');
     const profileId = crypto.randomBytes(16).toString('hex');
-    const {state, LGA, zone, street, userId, gender, height, build, complexion, age, ethnicity, email} = req.body
+    const {state, LGA, zone, street, userId, gender, height, build, complexion, age, ethnicity, email, phoneNo} = req.body
     if (!state || !LGA || !zone || !street || !userId || !gender || !height || !build || !complexion || !age || !ethnicity) {
         return res.status(400).json('all fields are required')
     }
@@ -60,6 +60,7 @@ const createUserProfile = tryCatch( async (req: Request, res: Response) => {
         data: {
             id: profileId,
             gender: gender,
+            phoneNo: phoneNo,
             height: height,
             build: build,
             complexion: complexion,
@@ -74,6 +75,7 @@ const createUserProfile = tryCatch( async (req: Request, res: Response) => {
 
 //log user in
 const logIn = tryCatch( async (req: Request, res: Response) => {
+    console.log(req.body)
     const { email, password } = req.body
     if (!password || !email) {
         return res.status(400).json('all fields required')
@@ -82,10 +84,8 @@ const logIn = tryCatch( async (req: Request, res: Response) => {
         where: {email: email}
     })
     if (!user) {
+        console.log('not user')
         return res.status(400).json('wrong email or password')
-    }
-    if (!user?.verified) {
-        return res.status(400).json('account not verified')
     }
     const isMatch = await bcrypt.compare(password, user?.password)
     if (isMatch) {
@@ -95,6 +95,9 @@ const logIn = tryCatch( async (req: Request, res: Response) => {
     res.status(400).json('wrong email or password')
 })
 
+/**
+ * send password reset link to users
+ */
 const sendPasswordLink = tryCatch(async (req: Request, res: Response) => {
     const {email} = req.body
         const user = await prisma.user.findFirst({
@@ -114,6 +117,7 @@ const sendPasswordLink = tryCatch(async (req: Request, res: Response) => {
     });
 })
 
+//confirm user token and update password
 const resetPassword = tryCatch (async (req: Request, res: Response) => {
     const {password} = req.body
     const {token} = req.params

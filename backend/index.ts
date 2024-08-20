@@ -22,7 +22,6 @@ app.use(express.json({}));
 app.use(express.urlencoded({extended: true}))
 
 app.use('/api/user', require('./routes/UserRoute'))
-app.use('/api/admin', require('./routes/AdminRoutes'))
 app.use('/api/product', Auth, require('./routes/ProductRoute'))
 app.use('/api/order', Auth, require('./routes/OrdersRoute'))
 

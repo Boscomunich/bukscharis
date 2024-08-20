@@ -11,14 +11,16 @@ const config: Config = {
     screens: {
       'sm': {'max': '767px'},
       'md': {'min': '768px','max': '1023px'},
-      'lg': {'min':'1024'}
+      'lg': {'min':'1024px'}
     },
     extend: {
       colors: {
-        primary: "#98BB899",
-        secondary: "#789678",
-        tertiary: "#475C45",
-        rare:'#141D14',
+        primary: "#00712D",
+        secondary: "#D5ED9F",
+        tertiary: "#FFFBE6",
+        rare:'#FF9100',
+        darkBg: '#000000',
+        darkS: '#1E5128',
         "black-100": "#100d25",
         "black-200": "#090325",
         "white-100": "#f3f3f3",
