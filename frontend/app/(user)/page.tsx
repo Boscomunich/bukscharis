@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react"
 
 export default function Home() {
   const session = useSession()
+  console.log(session)
   return (
     <div className=" h-screen w-screen dark:bg-darkBg bg-primary pt-20 text-3xl"
     onClick={() => signOut({
@@ -13,6 +14,7 @@ export default function Home() {
       callbackUrl: '/login',
     })}>
       {session?.data?.user?.email}
+      {session?.data?.user?.id}
     </div>
   );
 }

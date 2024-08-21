@@ -20,13 +20,15 @@ export default function SignUp () {
         setMessage('')
         try {
             const result: any = await login(values)
-            if (result) {
-                console.log(result.error.message)
+            if (result.error) {
+                setMessage(result.error.data)
             } else {
-                if (result.data) {
+                if (result.data) {1
                     signIn("credentials", {
-                        result,
-                        redirectTo: '/',
+                        email: result.data.email,
+                        token: result.data.token,
+                        id: result.data.id,
+                        redirectTo: '/'
                     })
                 }
             }
